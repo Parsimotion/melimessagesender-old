@@ -66,7 +66,7 @@ namespace MeliMessageSender.App_Start
         {
 	        kernel.Bind<QueueClient>().ToConstant(
 		        QueueClient.CreateFromConnectionString(
-			        CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString"), "MeliNotifications"));
+					CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString"), CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.Queue")));
         }        
     }
 }
