@@ -8,15 +8,16 @@ namespace MeliMessageSender.Controllers
 {
     public class NotificationController : ApiController
     {
+	    private readonly QueueClient queueClient;
 
-        public IHttpActionResult Get()
+	    public NotificationController(QueueClient queueClient)
+		{
+			this.queueClient = queueClient;
+		}
+
+	    public IHttpActionResult Get()
         {
-			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-
-			var Client =
-				QueueClient.CreateFromConnectionString(connectionString, "MeliNotifications");
-
-			var message = Client.Receive(TimeSpan.FromSeconds(10));
+			var message = this.queueClient.Receive(TimeSpan.FromSeconds(10));
 
 			if (message != null)
 			{
@@ -37,16 +38,12 @@ namespace MeliMessageSender.Controllers
 
         public void Post([FromBody]dynamic value)
         {
-			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-
-			var Client = QueueClient.CreateFromConnectionString(connectionString, "MeliNotifications");
-
 	        var recordsMessage = Newtonsoft.Json.JsonConvert.SerializeObject(value);
 			var message = new BrokeredMessage(recordsMessage);
 
 			message.Properties["TestProperty"] = "TestValue";
 
-			Client.Send(message);
+			this.queueClient.Send(message);
 
         }
     }
