@@ -40,11 +40,7 @@ namespace MeliMessageSender.Controllers
         {
 	        var recordsMessage = Newtonsoft.Json.JsonConvert.SerializeObject(value);
 			var message = new BrokeredMessage(recordsMessage);
-
-			message.Properties["TestProperty"] = "TestValue";
-
 			this.queueClient.Send(message);
-
         }
     }
 }
