@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace MeliMessageSender
 {
@@ -18,7 +23,29 @@ namespace MeliMessageSender
 
 			WebApiConfig.Register(GlobalConfiguration.Configuration);
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-			RouteConfig.RegisterRoutes(RouteTable.Routes);
+			FormatterConfig.RegisterFormatter(GlobalConfiguration.Configuration.Formatters);			
+
+		}
+	}
+
+	public static class FormatterConfig
+	{
+		public static void RegisterFormatter(MediaTypeFormatterCollection formatters)
+		{
+			formatters.Insert(0, JsonMediaTypeFormatter);
+			formatters.Remove(formatters.XmlFormatter);
+		}
+
+		public static JsonMediaTypeFormatter JsonMediaTypeFormatter
+		{
+			get
+			{
+				var formatter = new JsonMediaTypeFormatter
+				{
+					SerializerSettings = new JsonSerializerSettings()
+				};
+				return formatter;
+			}
 		}
 	}
 }
