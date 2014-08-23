@@ -6,11 +6,11 @@ using Microsoft.WindowsAzure;
 
 namespace MeliMessageSender.Controllers
 {
-    public class NotificationController : ApiController
+    public class NotificationsController : ApiController
     {
 	    private readonly QueueClient queueClient;
 
-	    public NotificationController(QueueClient queueClient)
+	    public NotificationsController(QueueClient queueClient)
 		{
 			this.queueClient = queueClient;
 		}
