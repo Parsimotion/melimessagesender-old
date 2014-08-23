@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Web.Http;
-using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
-using Microsoft.WindowsAzure;
 
 namespace MeliMessageSender.Controllers
 {
@@ -17,9 +15,21 @@ namespace MeliMessageSender.Controllers
 
         public void Post([FromBody]dynamic value)
         {
-	        var recordsMessage = Newtonsoft.Json.JsonConvert.SerializeObject(value);
-			var message = new BrokeredMessage(recordsMessage);
+			this.Log(value);
+	        var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+			var message = new BrokeredMessage(serialized);
 			this.queueClient.Send(message);
         }
+
+	    private void Log(dynamic value)
+	    {
+		    try
+		    {
+			    string userId = value.user_id;
+			    string resource = value.resource;
+			    System.Diagnostics.Trace.TraceInformation("{0} {1}", userId, resource);
+		    }
+		    catch {}
+	    }
     }
 }
