@@ -16,9 +16,9 @@ namespace MeliMessageSender.Controllers
         public void Post([FromBody]dynamic value)
         {
 			this.Log(value);
-	        var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(value);
-			var message = new BrokeredMessage(serialized);
-			this.queueClient.Send(message);
+	        //var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+			//var message = new BrokeredMessage(serialized);
+			//this.queueClient.Send(message);
         }
 
 	    private void Log(dynamic value)
