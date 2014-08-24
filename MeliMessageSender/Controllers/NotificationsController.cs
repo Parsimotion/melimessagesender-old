@@ -13,12 +13,13 @@ namespace MeliMessageSender.Controllers
 			this.queueClient = queueClient;
 		}
 
-        public void Post([FromBody]dynamic value)
+        public IHttpActionResult Post([FromBody]dynamic value)
         {
 			this.Log(value);
 			var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(value);
 			var message = new BrokeredMessage(serialized);
 			this.queueClient.Send(message);
+	        return Ok();
         }
 
 	    private void Log(dynamic value)
