@@ -8,8 +8,10 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using MeliMessageSender.App_Start;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using Thinktecture.IdentityModel.Http.Cors.WebApi;
 
 namespace MeliMessageSender
 {
@@ -21,9 +23,10 @@ namespace MeliMessageSender
 		{
 			AreaRegistration.RegisterAllAreas();
 
+			CorsConfig.RegisterCors(GlobalConfiguration.Configuration);
 			WebApiConfig.Register(GlobalConfiguration.Configuration);
 			FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-			FormatterConfig.RegisterFormatter(GlobalConfiguration.Configuration.Formatters);			
+			FormatterConfig.RegisterFormatter(GlobalConfiguration.Configuration.Formatters);
 
 		}
 	}
