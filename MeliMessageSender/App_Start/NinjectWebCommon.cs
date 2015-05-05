@@ -1,5 +1,9 @@
+using System.Configuration;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue;
+using Ninject.Activation;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(MeliMessageSender.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(MeliMessageSender.App_Start.NinjectWebCommon), "Stop")]
@@ -64,9 +68,19 @@ namespace MeliMessageSender.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-	        kernel.Bind<QueueClient>().ToConstant(
-		        QueueClient.CreateFromConnectionString(
-					CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString"), CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.Queue")));
-        }        
+	        kernel.Bind<CloudQueue>().ToMethod(BindQueue);
+        }
+
+	    private static CloudQueue BindQueue(IContext context)
+	    {
+			var connectionString = ConfigurationManager.ConnectionStrings["MercadolibreStorageConnectionString"].ConnectionString;
+			var cloudStorageAccount = CloudStorageAccount.Parse(connectionString);
+			var queueName = CloudConfigurationManager.GetSetting("QueueName");
+			var queueClient = cloudStorageAccount.CreateCloudQueueClient();
+			var queue = queueClient.GetQueueReference(queueName);
+			queue.CreateIfNotExists();
+			return queue;
+
+	    }
     }
 }
