@@ -1,24 +1,29 @@
-﻿using System.Web.Http;
+﻿using System.Threading.Tasks;
+using System.Web.Http;
+using MeliMessageSender.App_Start;
 using Microsoft.WindowsAzure.Storage.Queue;
 
 namespace MeliMessageSender.Controllers
 {
     public class NotificationsController : ApiController
     {
-		private readonly CloudQueue cloudQueue;
+		private readonly QueueService _queueService;
+	    private readonly RedisService redisService;
 
-		public NotificationsController(CloudQueue cloudQueue)
+	    public NotificationsController(QueueService queueService, RedisService redisService)
 		{
-			this.cloudQueue = cloudQueue;
+			this._queueService = queueService;
+			this.redisService = redisService;
 		}
 
-        public IHttpActionResult Post([FromBody]dynamic value)
+        public async Task<IHttpActionResult> Post([FromBody]Notification value)
         {
 			this.Log(value);
-			string message = Newtonsoft.Json.JsonConvert.SerializeObject(value);
-			var cloudQueueMessage = new CloudQueueMessage(message);
-			this.cloudQueue.AddMessage(cloudQueueMessage);
-			return Ok();
+	        if (!await redisService.IsUniqueNotification(value.resource)) return Ok();
+	        var message = Newtonsoft.Json.JsonConvert.SerializeObject(value);
+	        var cloudQueueMessage = new CloudQueueMessage(message);
+	        this._queueService.AddMessage(cloudQueueMessage);
+	        return Ok();
         }
 
 	    private void Log(dynamic value)
@@ -32,4 +37,13 @@ namespace MeliMessageSender.Controllers
 		    catch {}
 	    }
     }
+
+	public class Notification
+	{
+		public int user_id { get; set; }
+		public string resource { get; set; }
+		public string topic { get; set; }
+		public string received { get; set; }
+		public string sent { get; set; }
+	}
 }
