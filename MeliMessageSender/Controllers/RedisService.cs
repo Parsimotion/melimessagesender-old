@@ -6,7 +6,7 @@ namespace MeliMessageSender.Controllers
 {
 	public class RedisService
 	{
-		public static bool RedisStatus { get; set; }
+		public static bool RedisStatus { get; set; } = true;
 		private const string NOTIFICATIONS_SET_KEY_NAME = "unique-notifications";
 		private readonly IDatabase Database;
 

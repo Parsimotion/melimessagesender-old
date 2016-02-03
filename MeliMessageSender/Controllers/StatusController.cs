@@ -4,10 +4,11 @@ using Microsoft.WindowsAzure.Storage.Queue;
 
 namespace MeliMessageSender.Controllers
 {
-	public class StatusController
+	[RoutePrefix("status")]
+	public class StatusController : ApiController
 	{
-		[Route("status/redis")]
-		public StatusDto Post()
+		[Route("redis")]
+		public StatusDto Get()
 		{
 			var status = RedisService.RedisStatus ? "active" : "down";
 			return new StatusDto{Status = status};
