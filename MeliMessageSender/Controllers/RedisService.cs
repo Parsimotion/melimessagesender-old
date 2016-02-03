@@ -20,7 +20,7 @@ namespace MeliMessageSender.Controllers
 		{
 			try
 			{
-				//Here the secuence of calls matter
+				//Here the sequence of calls matter
 				var isUnique = await Database.SetAddAsync(NOTIFICATIONS_SET_KEY_NAME, resource);
 				RedisStatus = true;
 				return isUnique;

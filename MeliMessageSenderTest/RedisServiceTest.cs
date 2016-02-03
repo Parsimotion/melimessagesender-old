@@ -20,7 +20,7 @@ namespace MeliMessageSenderTest
 		}
 
 		[TestMethod]
-		public async Task When_redis_fails_a_resouse_is_unique_regardless_else()
+		public async Task When_redis_fails_a_resouce_is_unique_regardless_else()
 		{
 			this.DatabaseMock.Setup(d => d.SetAddAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ThrowsAsync(new Exception("La pucha! Pasó algo en Redis"));
 			this.Service = new RedisService(DatabaseMock.Object);
