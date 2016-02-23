@@ -89,19 +89,4 @@ namespace MeliMessageSender.App_Start
 
 	    }
     }
-
-	public class QueueService
-	{
-		private readonly CloudQueue _cloudQueue;
-
-		public QueueService(CloudQueue cloudQueue)
-		{
-			_cloudQueue = cloudQueue;
-		}
-
-		public virtual void AddMessage(CloudQueueMessage message)
-		{
-			_cloudQueue.AddMessage(message);
-		}
-	}
 }

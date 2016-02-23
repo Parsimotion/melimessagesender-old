@@ -176,6 +176,7 @@
   <ItemGroup>
     <Compile Include="App_Start\CorsConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
+    <Compile Include="Controllers\QueueService.cs" />
     <Compile Include="Controllers\NotificationsController.cs" />
     <Compile Include="Controllers\PeekController.cs" />
     <Compile Include="Controllers\RedisService.cs" />
