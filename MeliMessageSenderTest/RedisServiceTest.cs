@@ -4,7 +4,6 @@ using MeliMessageSender.Controllers;
 using Moq;
 using StackExchange.Redis;
 using Xunit;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace MeliMessageSenderTest
 {
@@ -23,7 +22,7 @@ namespace MeliMessageSenderTest
 		{
 			this.DatabaseMock.Setup(d => d.SetAddAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ThrowsAsync(new Exception("La pucha! Pasó algo en Redis"));
 			this.Service = new RedisService(DatabaseMock.Object);
-			Assert.IsTrue(await this.Service.IsUniqueNotification("aResource"));
+			Assert.True(await this.Service.IsUniqueNotification("aResource"));
 		}
 
 		[Fact]
@@ -31,7 +30,7 @@ namespace MeliMessageSenderTest
 		{
 			this.DatabaseMock.Setup(d => d.SetAddAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ReturnsAsync(true);
 			this.Service = new RedisService(DatabaseMock.Object);
-			Assert.IsTrue(await this.Service.IsUniqueNotification("aResource"));
+			Assert.True(await this.Service.IsUniqueNotification("aResource"));
 		}
 
 		[Fact]
@@ -39,7 +38,7 @@ namespace MeliMessageSenderTest
 		{
 			this.DatabaseMock.Setup(d => d.SetAddAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ReturnsAsync(false);
 			this.Service = new RedisService(DatabaseMock.Object);
-			Assert.IsFalse(await this.Service.IsUniqueNotification("aResource"));
+			Assert.False(await this.Service.IsUniqueNotification("aResource"));
 		}
 
 		[Fact]
@@ -47,7 +46,7 @@ namespace MeliMessageSenderTest
 		{
 			this.DatabaseMock.Setup(d => d.SetAddAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ReturnsAsync(false);
 			await new RedisService(DatabaseMock.Object).IsUniqueNotification("aResource");
-			Assert.IsTrue(RedisService.RedisStatus);
+			Assert.True(RedisService.RedisStatus);
 		}
 
 		[Fact]
@@ -55,7 +54,7 @@ namespace MeliMessageSenderTest
 		{
 			this.DatabaseMock.Setup(d => d.SetAddAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>())).ThrowsAsync(new Exception("La pucha! Pasó algo en Redis"));
 			await new RedisService(DatabaseMock.Object).IsUniqueNotification("aResource");
-			Assert.IsFalse(RedisService.RedisStatus);
+			Assert.False(RedisService.RedisStatus);
 		}
 	}
 }
