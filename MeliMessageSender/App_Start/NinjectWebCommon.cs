@@ -1,9 +1,11 @@
 using System.Configuration;
+using MeliMessageSender.Controllers;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Ninject.Activation;
+using StackExchange.Redis;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(MeliMessageSender.App_Start.NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(MeliMessageSender.App_Start.NinjectWebCommon), "Stop")]
@@ -69,6 +71,10 @@ namespace MeliMessageSender.App_Start
         private static void RegisterServices(IKernel kernel)
         {
 	        kernel.Bind<CloudQueue>().ToMethod(BindQueue);
+	        kernel.Bind<RedisService>().ToSelf();
+			kernel.Bind<QueueService>().ToSelf();
+	        kernel.Bind<ConnectionMultiplexer>().ToConstant(ConnectionMultiplexer.Connect(ConfigurationManager.AppSettings["REDIS"] ?? "localhost,keepAlive=300"));
+	        kernel.Bind<IDatabase>().ToMethod(c => c.Kernel.Get<ConnectionMultiplexer>().GetDatabase());
         }
 
 	    private static CloudQueue BindQueue(IContext context)
@@ -83,4 +89,19 @@ namespace MeliMessageSender.App_Start
 
 	    }
     }
+
+	public class QueueService
+	{
+		private readonly CloudQueue _cloudQueue;
+
+		public QueueService(CloudQueue cloudQueue)
+		{
+			_cloudQueue = cloudQueue;
+		}
+
+		public virtual void AddMessage(CloudQueueMessage message)
+		{
+			_cloudQueue.AddMessage(message);
+		}
+	}
 }
