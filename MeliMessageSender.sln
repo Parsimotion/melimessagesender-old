@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeliMessageSender", "MeliMessageSender\MeliMessageSender.csproj", "{7D7EA709-3E53-429A-B5C3-C959E7179086}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{213FC016-104D-42BF-BC29-879D129B1A45}"
@@ -10,11 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{213FC0
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeliMessageSenderTest", "MeliMessageSenderTest\MeliMessageSenderTest.csproj", "{56985967-2DA3-4DAD-9FB5-1535AFF9689F}"
-	ProjectSection(ProjectDependencies) = postProject
-		{7D7EA709-3E53-429A-B5C3-C959E7179086} = {7D7EA709-3E53-429A-B5C3-C959E7179086}
 	EndProjectSection
 EndProject
 Global
@@ -27,10 +20,6 @@ Global
 		{7D7EA709-3E53-429A-B5C3-C959E7179086}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D7EA709-3E53-429A-B5C3-C959E7179086}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D7EA709-3E53-429A-B5C3-C959E7179086}.Release|Any CPU.Build.0 = Release|Any CPU
-		{56985967-2DA3-4DAD-9FB5-1535AFF9689F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{56985967-2DA3-4DAD-9FB5-1535AFF9689F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{56985967-2DA3-4DAD-9FB5-1535AFF9689F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{56985967-2DA3-4DAD-9FB5-1535AFF9689F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
