@@ -14,6 +14,12 @@ namespace MeliMessageSender
 				routeTemplate: "{controller}/{id}",
 				defaults: new { id = RouteParameter.Optional }
 			);
+
+			config.Routes.MapHttpRoute(
+				name: "MerchantOrdersApi",
+				routeTemplate: "{controller}/{action}/{id}",
+				defaults: new { id = RouteParameter.Optional }
+			);
 		}
 	}
 }
