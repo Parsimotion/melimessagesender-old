@@ -12,10 +12,8 @@ namespace MeliMessageSender.Services
 
 		public async Task<UserInformation> GetUserInformationAsync(int userId)
 		{
-			var request = BuildRequest(Method.GET, "users/me");
-			var token = GetAuthorizationToken(userId);
-			request.AddHeader("Authorization", token);
-			request.AddQueryParameter("authenticationType", "mercadolibre");
+			var request = BuildRequest(Method.GET, "/users/me");
+			request.AddHeader("Authorization", GetAuthorizationToken(userId));
 			var response = await ExecuteAuthorizedRequest(request);
 			return DeserializeResponse<UserInformation>(response.Content);
 		}
@@ -33,6 +31,9 @@ namespace MeliMessageSender.Services
 			return $"Basic {token}";
 		}
 
-		protected override void Authorize(RestRequest request) { }
+		protected override void Authorize(RestRequest request)
+		{
+			request.AddQueryParameter("authenticationType", "mercadolibre");
+		}
 	}
 }
