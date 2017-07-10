@@ -65,12 +65,22 @@ namespace MeliMessageSender.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-	        kernel.Bind<QueueClient>().ToConstant(
-		        QueueClient.CreateFromConnectionString(
-					CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString"), CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.Queue")));
+	        BindQueueClient(kernel);
+	        BindMercadolibreApi(kernel);
+        }
 
-	        kernel.Bind<MercadolibreService>().ToSelf().InSingletonScope();
+	    private static void BindMercadolibreApi(IKernel kernel)
+	    {
+		    var mercadolibreUrl = CloudConfigurationManager.GetSetting("MercadolibreUrl") ?? "https://mercadolibre-development.azurewebsites.net";
+		    kernel.Bind<MercadolibreApi>().ToConstant(new MercadolibreApi(mercadolibreUrl));
+	    }
 
-		}
-	}
+	    private static void BindQueueClient(IKernel kernel)
+	    {
+		    kernel.Bind<QueueClient>().ToConstant(
+			    QueueClient.CreateFromConnectionString(
+				    CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString"),
+				    CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.Queue")));
+	    }
+    }
 }

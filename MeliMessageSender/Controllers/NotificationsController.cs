@@ -11,10 +11,10 @@ namespace MeliMessageSender.Controllers
 	public class NotificationsController : ApiController
 	{
 		private readonly QueueClient queueClient;
-		private readonly MercadolibreService mercadolibre;
+		private readonly MercadolibreApi mercadolibre;
 		static readonly IAppCache cache = new CachingService();
 
-		public NotificationsController(QueueClient queueClient, MercadolibreService mercadolibre)
+		public NotificationsController(QueueClient queueClient, MercadolibreApi mercadolibre)
 		{
 			this.queueClient = queueClient;
 			this.mercadolibre = mercadolibre;
