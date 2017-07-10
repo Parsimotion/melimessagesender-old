@@ -31,7 +31,8 @@ namespace MeliMessageSender.Controllers
 
 		private async Task SendIfEnabledUser(dynamic value)
 		{
-			var shouldSend = await MessageIsFromEnabledUser(value.user_id);
+			string userId = value.user_id;
+			var shouldSend = await MessageIsFromEnabledUser(userId);
 			if (shouldSend)
 			{
 				var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(value);
@@ -45,7 +46,7 @@ namespace MeliMessageSender.Controllers
 			try
 			{
 				var userInformation = await GetUserInformation(userId);
-				return userInformation.Enabled;
+				return userInformation.enabled;
 			}
 			catch (Exception) //If there is any error
 			{

@@ -7,7 +7,7 @@ namespace MeliMessageSender.Models
 {
 	public class UserInformation
 	{
-		public bool UserId { get; set; }
-		public bool Enabled { get; set; }
+		public int userId { get; set; }
+		public bool enabled { get; set; }
 	}
 }
