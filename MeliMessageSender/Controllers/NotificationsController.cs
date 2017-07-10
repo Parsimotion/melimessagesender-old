@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Threading.Tasks;
 using System.Web.Http;
 using LazyCache;
 using MeliMessageSender.Models;
@@ -13,6 +14,7 @@ namespace MeliMessageSender.Controllers
 		private readonly QueueClient queueClient;
 		private readonly MercadolibreApi mercadolibre;
 		static readonly IAppCache cache = new CachingService();
+		static readonly double expirationTime = double.Parse(ConfigurationManager.AppSettings["UsersCacheExpiration"] ?? "15");
 
 		public NotificationsController(QueueClient queueClient, MercadolibreApi mercadolibre)
 		{
@@ -20,29 +22,29 @@ namespace MeliMessageSender.Controllers
 			this.mercadolibre = mercadolibre;
 		}
 
-		public IHttpActionResult Post([FromBody]dynamic value)
+		public async Task<IHttpActionResult> Post([FromBody]dynamic value)
 		{
 			this.Log(value);
-			SendIfEnabledUser(value);
+			await SendIfEnabledUser(value);
 			return Ok();
 		}
 
-		private void SendIfEnabledUser(dynamic value)
+		private async Task SendIfEnabledUser(dynamic value)
 		{
-			var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(value);
-			var shouldSend = MessageIsFromEnabledUser(value.user_id);
+			var shouldSend = await MessageIsFromEnabledUser(value.user_id);
 			if (shouldSend)
 			{
+				var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(value);
 				var message = new BrokeredMessage(serialized);
 				this.queueClient.Send(message);
 			}
 		}
 
-		private bool MessageIsFromEnabledUser(string userId)
+		private async Task<bool> MessageIsFromEnabledUser(string userId)
 		{
 			try
 			{
-				var userInformation = GetUserInformation(userId);
+				var userInformation = await GetUserInformation(userId);
 				return userInformation.Enabled;
 			}
 			catch (Exception) //If there is any error
@@ -51,13 +53,12 @@ namespace MeliMessageSender.Controllers
 			}
 		}
 
-		private UserInformation GetUserInformation(string userId)
+		private async Task<UserInformation> GetUserInformation(string userId)
 		{
-			var expirationTime = ConfigurationManager.AppSettings["UsersCacheExpiration"] ?? "15";
-			var userInformation = cache.GetOrAdd(
-				userId,
-				() => mercadolibre.GetUserInformation(int.Parse(userId)),
-				DateTimeOffset.Now.AddMinutes(double.Parse(expirationTime))
+			var userInformation = await cache.GetOrAddAsync(
+				userId, 
+				() => mercadolibre.GetUserInformationAsync(int.Parse(userId)),
+				DateTimeOffset.Now.AddMinutes(expirationTime)
 			);
 			return userInformation;
 		}
