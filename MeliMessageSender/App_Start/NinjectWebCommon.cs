@@ -13,8 +13,9 @@ namespace MeliMessageSender.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
+    using MeliMessageSender.Services;
 
-    public static class NinjectWebCommon 
+	public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
@@ -67,6 +68,9 @@ namespace MeliMessageSender.App_Start
 	        kernel.Bind<QueueClient>().ToConstant(
 		        QueueClient.CreateFromConnectionString(
 					CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString"), CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.Queue")));
-        }        
-    }
+
+	        kernel.Bind<MercadolibreService>().ToSelf().InSingletonScope();
+
+		}
+	}
 }
