@@ -21,9 +21,8 @@ namespace MeliMessageSender.Controllers
 			var message = new BrokeredMessage(serialized);
 	        var ignoredProducts = Config.IgnoredProducts;
 	        string resource = value.resource;
-			if (ignoredProducts.Any(it => resource.Contains(it)))
-		        return Ok();
-			this.queueClient.Send(message);
+			if (!ignoredProducts.Any(it => resource.Contains(it)))
+				this.queueClient.Send(message);
 	        return Ok();
         }
 
