@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Http;
 using Microsoft.ServiceBus.Messaging;
 
@@ -18,7 +19,10 @@ namespace MeliMessageSender.Controllers
 			this.Log(value);
 			var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(value);
 			var message = new BrokeredMessage(serialized);
-			this.queueClient.Send(message);
+	        var ignoredProducts = Config.IgnoredProducts;
+	        string resource = value.resource;
+			if (!ignoredProducts.Any(it => resource.Contains(it)))
+				this.queueClient.Send(message);
 	        return Ok();
         }
 
