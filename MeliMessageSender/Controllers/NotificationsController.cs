@@ -20,7 +20,8 @@ namespace MeliMessageSender.Controllers
 			var serialized = Newtonsoft.Json.JsonConvert.SerializeObject(value);
 			var message = new BrokeredMessage(serialized);
 	        var ignoredProducts = Config.IgnoredProducts;
-	        if (ignoredProducts.Any(it => value.resource.contais(it)))
+	        string resource = value.resource;
+			if (ignoredProducts.Any(it => resource.Contains(it)))
 		        return Ok();
 			this.queueClient.Send(message);
 	        return Ok();
